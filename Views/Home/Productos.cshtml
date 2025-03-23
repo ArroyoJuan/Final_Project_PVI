@@ -1,28 +1,10 @@
-﻿@model List<Producto>
-@{
-    ViewData["Title"] = "Productos 2";
+﻿@{
+    ViewData["Title"] = "Productos";
 }
 @{
     Layout = "_Layout";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Productos Test</h1>
+    <h1 class="display-4">C_Productos</h1>
 </div>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var producto in Model)
-        {
-            <tr>
-                <td>@producto.IdProducto</td>
-                <td>@producto.Nombre</td>
-            </tr>
-        }
-    </tbody>
-</table>

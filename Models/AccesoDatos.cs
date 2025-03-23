@@ -1,4 +1,8 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
+using System.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Final_Project_PVI.Models
 {
@@ -9,7 +13,65 @@ namespace Final_Project_PVI.Models
         {
             _conexion = configuration.GetConnectionString("DefaultConnection");
         }
+        //AgregarProducto
+        public void AgregarProducto(Producto productos)
+        {
+            using (SqlConnection conn = new SqlConnection(_conexion))
+            {
+                try
+                {
+                    string query = "Exec sp_InsertarProducto @Nombre,@Descripcion,@Precio,@Stock,@IdProveedor,@AdicionadoPor";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Nombre", productos.Nombre);
+                        cmd.Parameters.AddWithValue("@Descripcion", productos.Descripcion);
+                        cmd.Parameters.AddWithValue("@Precio", productos.Precio);
+                        cmd.Parameters.AddWithValue("@Stock", productos.Stock);
+                        cmd.Parameters.AddWithValue("@IdProveedor", productos.IdProducto);
+                        cmd.Parameters.AddWithValue("@AdicionadoPor", productos.AdicionadoPor);
 
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error al registrar pedido " + ex.Message);
+                }
+            }
+        }
+        public List<Producto> ObtenerProductos()
+        {
+            List<Producto> productos = new List<Producto>();
+            using(SqlConnection con=new SqlConnection(_conexion))
+            {
+                con.Open();
+                using(SqlCommand cmd=new SqlCommand("sp_ConsultarProducto", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    using(SqlDataReader reader=cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            productos.Add(new Producto()
+                            {
+                                IdProducto = reader.GetInt32(0),
+                                Nombre = reader.GetString(1),
+                                Descripcion = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                                Precio = reader.GetDecimal(3),
+                                Stock = reader.GetInt32(4),
+                                IdProveedor = reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
+                                FechaAdicion = reader.GetDateTime(6),
+                                AdicionadoPor = reader.IsDBNull(7) ? "" : reader.GetString(7),
+                                FechaModificacion = reader.IsDBNull(8) ? DateTime.MinValue : reader.GetDateTime(8),
+                                ModificacionPor = reader.IsDBNull(9) ? "" : reader.GetString(9)
+                            });
+                        }
+                    }
+                }
+            }
+            return productos;
+        }
         /*public void IngresarPedido(Pedidos pedido)
         {
             using (SqlConnection conn = new SqlConnection(_conexion))

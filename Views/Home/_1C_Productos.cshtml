@@ -1,0 +1,103 @@
+﻿@model Producto
+@{
+    ViewData["Title"] = "_1C_Productos";
+    Layout = "_Layout";
+    var productos = ViewBag.Productos as List<Producto>;
+}
+
+@if(TempData["SuccessMessage"]!=null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="text-center">
+    <h1 class="display-4">_1C_Productos</h1>
+    <div>
+        <form asp-action="Cre_Pro" method="post">
+            <div class="boxInputs">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input asp-for="Nombre" type="text" class="form-control" placeholder="Nombre del producto" />
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea asp-for="Descripcion" class="form-control" id="TADescripcion" placeholder="Descripcion del producto"  rows="2" cols="20"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Precio</label>
+                    <input asp-for="Precio" class="form-control" type="text" step="0.01" placeholder="0.00" />
+                </div>
+
+                <div class="form-group">
+                    <label>Cantidad en Stock</label>
+                    <input asp-for="Stock" class="form-control" type="number" placeholder="0" />
+                </div>
+
+                <div class="form-group">
+                    <label>Identificacion del Proveedor</label>
+                    <input asp-for="IdProveedor" type="text" class="form-control" placeholder="Id del Proveedor" />
+                </div>
+
+
+                <div class="form-group">
+                    <label>Adiocionado por...</label>
+                    <input asp-for="AdicionadoPor" type="text" class="form-control" placeholder="Adicionado por" />
+                </div>
+
+            </div>
+            <button type="reset" class="btn btn-secondary">Limpiar</button>
+            <button type="submit" class="btn btn-primary">Agregar producto</button>
+        </form>
+    </div>
+    <div>
+        <table class="table table-hover mt-3">
+            <thead class="table-header">
+                <tr>
+                    <th>IdProducto</th>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>IdProveedor</th>
+                    <th>FechaAdicion</th>
+                    <th>Adicionador Por</th>
+                    <th>FechaModificacion</th>
+                    <th>Modificado Por</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (productos != null)
+                {
+                    @foreach (var producto in productos)
+                    {
+                        <tr>
+                            <td>@producto.IdProducto</td>
+                            <td>@producto.Nombre</td>
+                            <td>@producto.Descripcion</td>
+                            <td>@producto.Precio</td>
+                            <td>@producto.Stock</td>
+                            <td>@producto.IdProveedor</td>
+                            <td>@(producto.FechaAdicion == DateTime.MinValue ? "N/A" : producto.FechaAdicion.ToString("yyyy-MM-dd HH:mm"))</td>
+                            <td>@producto.AdicionadoPor</td>
+                            <td>@(producto.FechaModificacion == DateTime.MinValue ? "N/A" : producto.FechaModificacion.ToString("yyyy-MM-dd HH:mm"))</td>
+                            <td>@producto.ModificacionPor</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>    
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

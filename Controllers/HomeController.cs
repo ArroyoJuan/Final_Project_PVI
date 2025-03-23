@@ -8,6 +8,11 @@ namespace Final_Project_PVI.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly AccesoDatos _datos;
+        public HomeController(AccesoDatos datos)
+        {
+            _datos = datos;
+        }
         public IActionResult Start()
         {
             ViewData["HideMenu"] = true;
@@ -28,16 +33,27 @@ namespace Final_Project_PVI.Controllers
         }
         public IActionResult Productos()
         {
-            string xmlRuta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Productos.xml");
-            XDocument doc = XDocument.Load(xmlRuta);
-            var productos = doc.Descendants("Producto")
-                .Select(p => new Producto
-                {
-                    IdProducto = (int)p.Element("IdProducto"),
-                    Nombre = (string)p.Element("Nombre")
-                }).ToList();
-
-            return View(productos);
+            return View();
+        }
+        public IActionResult _1C_Productos()
+        {
+            List<Producto> productos = _datos.ObtenerProductos(); 
+            ViewBag.Productos = productos;
+            return View(new Producto());
+        }
+        public IActionResult Cre_Pro(Producto producto)
+        {
+            try
+            {
+                _datos.AgregarProducto(producto);
+                TempData["SuccessMessage"] = "Tu producto se guardo con exito.";
+                return RedirectToAction("_1C_Productos");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Tu producto no se guardó. Error: " + ex.Message;
+                return RedirectToAction("_1C_Productos");
+            }
         }
     }
 }
