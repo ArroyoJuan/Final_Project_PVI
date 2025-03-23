@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Start";
+}
+@{
+    Layout = "_NoMenuLayout";
+}
+@{
+    ViewData["BodyClass"] = "start-page";
+}
+
+<link href="~/css/site.css" rel="stylesheet" />
+<div class="text-center">
+    <div>
+        <a href="@Url.Action("Main", "Home")" class="btn btn-primary">Ingresar al sitio</a>
+    </div>
+</div>

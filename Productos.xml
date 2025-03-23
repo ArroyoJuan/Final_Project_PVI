@@ -1,0 +1,10 @@
+﻿<Productos>
+	<Producto>
+		<IdProducto>1</IdProducto>
+		<Nombre>P1</Nombre>
+	</Producto>
+	<Producto>
+		<IdProducto>2</IdProducto>
+		<Nombre>P2</Nombre>
+	</Producto>
+</Productos>
