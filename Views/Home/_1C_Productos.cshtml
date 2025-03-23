@@ -21,7 +21,8 @@
 <div class="text-center">
     <h1 class="display-4">_1C_Productos</h1>
     <div>
-        <form asp-action="Cre_Pro" method="post">
+        <form id="productoForm" asp-action="Cre_Pro" method="post">
+
             <div class="boxInputs">
                 <div class="form-group">
                     <label>Nombre</label>
@@ -56,7 +57,7 @@
 
             </div>
             <button type="reset" class="btn btn-secondary">Limpiar</button>
-            <button type="submit" class="btn btn-primary">Agregar producto</button>
+            <button type="submit" class="btn btn-primary">Agregar producto</button
         </form>
     </div>
     <div>
@@ -73,6 +74,7 @@
                     <th>Adicionador Por</th>
                     <th>FechaModificacion</th>
                     <th>Modificado Por</th>
+                    <th>Editar</th>
                 </tr>
             </thead>
             <tbody>

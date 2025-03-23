@@ -27,7 +27,7 @@ namespace Final_Project_PVI.Models
                         cmd.Parameters.AddWithValue("@Descripcion", productos.Descripcion);
                         cmd.Parameters.AddWithValue("@Precio", productos.Precio);
                         cmd.Parameters.AddWithValue("@Stock", productos.Stock);
-                        cmd.Parameters.AddWithValue("@IdProveedor", productos.IdProducto);
+                        cmd.Parameters.AddWithValue("@IdProveedor", productos.IdProveedor);
                         cmd.Parameters.AddWithValue("@AdicionadoPor", productos.AdicionadoPor);
 
                         conn.Open();
@@ -72,6 +72,40 @@ namespace Final_Project_PVI.Models
             }
             return productos;
         }
+        public bool ConsultarUsuario(string getUsuarioToConsult, string getContraToConsult)
+        {
+            bool condicion = false;
+            List<Usuario> usuario = new List<Usuario>();
+
+            byte[] contrasenaBinary = ConvertirStringAVarBinary(getContraToConsult);
+
+            using (SqlConnection con = new SqlConnection(_conexion))
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand("sp_ConsultarUsuario", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@NombreUsuario", getUsuarioToConsult);
+                    cmd.Parameters.AddWithValue("@Contraseña", contrasenaBinary);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            condicion = true;
+                        }
+                    }
+                }
+            }
+            return condicion;
+        }
+        private byte[] ConvertirStringAVarBinary(string str)
+        {
+            return System.Text.Encoding.UTF8.GetBytes(str);
+        }
+
+
         /*public void IngresarPedido(Pedidos pedido)
         {
             using (SqlConnection conn = new SqlConnection(_conexion))

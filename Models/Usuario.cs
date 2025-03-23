@@ -7,6 +7,7 @@ namespace Final_Project_PVI.Models
         [Key]
         [Required(ErrorMessage = "La identificacion es obligatorio")]
         public int IdUsuario { get; set; }
+        public string NombreUsuario { get; set; }
         public string Contraseña { get; set; }
 
         public string Rol { get; set; }

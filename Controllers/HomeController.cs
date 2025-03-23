@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
+
 namespace Final_Project_PVI.Controllers
 {
     public class HomeController : Controller
@@ -55,5 +56,27 @@ namespace Final_Project_PVI.Controllers
                 return RedirectToAction("_1C_Productos");
             }
         }
+        public IActionResult Log_In(Usuario usuario)
+        {
+            try
+            {
+                if (_datos.ConsultarUsuario(usuario.NombreUsuario, usuario.Contraseña))
+                {
+                    TempData["Usuario"] = usuario.NombreUsuario;
+                    return RedirectToAction("_1C_Productos");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Usuario o contraseña incorrectos.";
+                    return RedirectToAction("Start");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error al iniciar sesión. Error: " + ex.Message;
+                return RedirectToAction("Start");
+            }
+        }
+
     }
 }
