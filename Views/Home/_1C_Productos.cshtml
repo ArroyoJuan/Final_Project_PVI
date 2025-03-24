@@ -48,13 +48,6 @@
                     <label>Identificacion del Proveedor</label>
                     <input asp-for="IdProveedor" type="text" class="form-control" placeholder="Id del Proveedor" />
                 </div>
-
-
-                <div class="form-group">
-                    <label>Adiocionado por...</label>
-                    <input asp-for="AdicionadoPor" type="text" class="form-control" placeholder="Adicionado por" />
-                </div>
-
             </div>
             <button type="reset" class="btn btn-secondary">Limpiar</button>
             <button type="submit" class="btn btn-primary">Agregar producto</button
@@ -75,6 +68,7 @@
                     <th>FechaModificacion</th>
                     <th>Modificado Por</th>
                     <th>Editar</th>
+                    <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
@@ -93,13 +87,38 @@
                             <td>@producto.AdicionadoPor</td>
                             <td>@(producto.FechaModificacion == DateTime.MinValue ? "N/A" : producto.FechaModificacion.ToString("yyyy-MM-dd HH:mm"))</td>
                             <td>@producto.ModificacionPor</td>
+                            <td>
+                                <button type="button" class="btn btn-warning btn-sm" onclick="eliminarProducto(@producto.IdProducto,Nombre,Descripcion,Precio,Stock,IdProveedor)">
+                                    Editar
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(@producto.IdProducto)">
+                                    Eliminar
+                                </button>
+                            </td>
                         </tr>
                     }
                 }
             </tbody>
         </table>    
     </div>
+
 </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+<script>
+    function eliminarProducto(id) {
+        if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+            fetch(`/Home/Eli_Pro/${id}`, {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload(); 
+                }
+            })
+        }
+    }
+</script>

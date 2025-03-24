@@ -8,7 +8,11 @@ namespace Final_Project_PVI.Models
 {
     public class AccesoDatos
     {
+        public string usuarioLogged { get; set; }
         private readonly string _conexion;
+        public AccesoDatos()
+        {
+        }
         public AccesoDatos(IConfiguration configuration)
         {
             _conexion = configuration.GetConnectionString("DefaultConnection");
@@ -71,6 +75,19 @@ namespace Final_Project_PVI.Models
                 }
             }
             return productos;
+        }
+        public void EliminarProducto(int idProducto)
+        {
+            using (SqlConnection con = new SqlConnection(_conexion))
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand("sp_EliminarProducto", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdProducto", idProducto);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
         public bool ConsultarUsuario(string getUsuarioToConsult, string getContraToConsult)
         {

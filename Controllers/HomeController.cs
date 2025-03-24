@@ -9,6 +9,8 @@ namespace Final_Project_PVI.Controllers
 {
     public class HomeController : Controller
     {
+        AccesoDatos accesoDatos = new AccesoDatos();
+        private string memoryUser = "";
         private readonly AccesoDatos _datos;
         public HomeController(AccesoDatos datos)
         {
@@ -46,8 +48,16 @@ namespace Final_Project_PVI.Controllers
         {
             try
             {
+                var nombreUsuario = HttpContext.Session.GetString("NombreUsuario");
+                if (string.IsNullOrEmpty(nombreUsuario))
+                {
+                    TempData["ErrorMessage"] = "Sesión expirada o no iniciada.";
+                    return RedirectToAction("Start");
+                }
+
+                producto.AdicionadoPor = nombreUsuario;
                 _datos.AgregarProducto(producto);
-                TempData["SuccessMessage"] = "Tu producto se guardo con exito.";
+                TempData["SuccessMessage"] = "Tu producto se guardó con éxito.";
                 return RedirectToAction("_1C_Productos");
             }
             catch (Exception ex)
@@ -62,7 +72,7 @@ namespace Final_Project_PVI.Controllers
             {
                 if (_datos.ConsultarUsuario(usuario.NombreUsuario, usuario.Contraseña))
                 {
-                    TempData["Usuario"] = usuario.NombreUsuario;
+                    HttpContext.Session.SetString("NombreUsuario", usuario.NombreUsuario);
                     return RedirectToAction("_1C_Productos");
                 }
                 else
@@ -77,6 +87,28 @@ namespace Final_Project_PVI.Controllers
                 return RedirectToAction("Start");
             }
         }
-
+        public IActionResult Eli_Pro(int id)
+        {
+            try
+            {
+                _datos.EliminarProducto(id);
+                TempData["SuccessMessage"] = "El producto se ha eliminado con éxito.";
+                return Ok(); // Responde con un código de estado HTTP 200 (OK)
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "No se pudo eliminar el producto. Error: " + ex.Message;
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+            public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(5);
+            });
+            services.AddControllersWithViews();
+        }
     }
 }
