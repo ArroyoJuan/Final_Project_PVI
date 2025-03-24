@@ -93,7 +93,7 @@ namespace Final_Project_PVI.Controllers
             {
                 _datos.EliminarProducto(id);
                 TempData["SuccessMessage"] = "El producto se ha eliminado con éxito.";
-                return Ok(); // Responde con un código de estado HTTP 200 (OK)
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -101,7 +101,22 @@ namespace Final_Project_PVI.Controllers
                 return StatusCode(500, "Error interno del servidor");
             }
         }
-            public void ConfigureServices(IServiceCollection services)
+        public IActionResult Edi_Pro(int id,string nombre,string descripcion,double precio,int stock, int idproveedor)
+        {
+            try
+            {
+                var nombreUsuario = HttpContext.Session.GetString("NombreUsuario");
+                _datos.ActualizarProducto(id, nombre,descripcion,precio,stock,idproveedor, nombreUsuario);
+                TempData["SuccessMessage"] = "El producto se ha actualizado con éxito.";
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "No se pudo eliminar el producto. Error: " + ex.Message;
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
             services.AddSession(options =>

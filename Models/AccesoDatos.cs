@@ -89,6 +89,33 @@ namespace Final_Project_PVI.Models
                 }
             }
         }
+        public void ActualizarProducto(int id, string nombre, string descripcion, double precio, int stock, int idproveedor,string modificadoPor)
+        {
+            using (SqlConnection conn = new SqlConnection(_conexion))
+            {
+                try
+                {
+                    string query = "Exec sp_ActualizarProducto @IdProducto,@Nombre,@Descripcion,@Precio,@Stock,@IdProveedor,@ModificadoPor";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Nombre", id);
+                        cmd.Parameters.AddWithValue("@Nombre", nombre);
+                        cmd.Parameters.AddWithValue("@Descripcion", descripcion);
+                        cmd.Parameters.AddWithValue("@Precio", precio);
+                        cmd.Parameters.AddWithValue("@Stock", stock);
+                        cmd.Parameters.AddWithValue("@IdProveedor", idproveedor);
+                        cmd.Parameters.AddWithValue("@AdicionadoPor", modificadoPor);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error al registrar pedido " + ex.Message);
+                }
+            }
+        }
         public bool ConsultarUsuario(string getUsuarioToConsult, string getContraToConsult)
         {
             bool condicion = false;

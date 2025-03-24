@@ -18,15 +18,15 @@
     </div>
 }
 
-<div class="text-center">
-    <h1 class="display-4">_1C_Productos</h1>
-    <div>
-        <form id="productoForm" asp-action="Cre_Pro" method="post">
+<form id="productoForm" asp-action="Cre_Pro" method="post">
+    <div class="text-center">
+        <h1 class="display-4">_1C_Productos</h1>
+        <div>
 
             <div class="boxInputs">
                 <div class="form-group">
                     <label>Nombre</label>
-                    <input asp-for="Nombre" type="text" class="form-control" placeholder="Nombre del producto" />
+                    <input asp-for="Nombre" type="text" class="form-control" placeholder="Nombre del producto" id="NombreId" />
                 </div>
 
                 <div class="form-group">
@@ -36,79 +36,81 @@
 
                 <div class="form-group">
                     <label>Precio</label>
-                    <input asp-for="Precio" class="form-control" type="text" step="0.01" placeholder="0.00" />
+                    <input asp-for="Precio" class="form-control" type="text" step="0.01" placeholder="0.00" id="Precio" />
                 </div>
 
                 <div class="form-group">
                     <label>Cantidad en Stock</label>
-                    <input asp-for="Stock" class="form-control" type="number" placeholder="0" />
+                    <input asp-for="Stock" class="form-control" type="number" placeholder="0" id="Stock" />
                 </div>
 
                 <div class="form-group">
                     <label>Identificacion del Proveedor</label>
-                    <input asp-for="IdProveedor" type="text" class="form-control" placeholder="Id del Proveedor" />
+                    <input asp-for="IdProveedor" type="text" class="form-control" placeholder="Id del Proveedor" id="IdProveedor" />
                 </div>
             </div>
             <button type="reset" class="btn btn-secondary">Limpiar</button>
-            <button type="submit" class="btn btn-primary">Agregar producto</button
-        </form>
-    </div>
-    <div>
-        <table class="table table-hover mt-3">
-            <thead class="table-header">
-                <tr>
-                    <th>IdProducto</th>
-                    <th>Nombre</th>
-                    <th>Descripcion</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                    <th>IdProveedor</th>
-                    <th>FechaAdicion</th>
-                    <th>Adicionador Por</th>
-                    <th>FechaModificacion</th>
-                    <th>Modificado Por</th>
-                    <th>Editar</th>
-                    <th>Eliminar</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (productos != null)
-                {
-                    @foreach (var producto in productos)
+            <button type="submit" class="btn btn-primary">Agregar producto</button>
+            <button id="btnEditar" class="btn btn-info">Editar</button>
+        </div>
+        <div>
+            <table class="table table-hover mt-3">
+                <thead class="table-header">
+                    <tr>
+                        <th>IdProducto</th>
+                        <th>Nombre</th>
+                        <th>Descripcion</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>IdProveedor</th>
+                        <th>FechaAdicion</th>
+                        <th>Adicionador Por</th>
+                        <th>FechaModificacion</th>
+                        <th>Modificado Por</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (productos != null)
                     {
-                        <tr>
-                            <td>@producto.IdProducto</td>
-                            <td>@producto.Nombre</td>
-                            <td>@producto.Descripcion</td>
-                            <td>@producto.Precio</td>
-                            <td>@producto.Stock</td>
-                            <td>@producto.IdProveedor</td>
-                            <td>@(producto.FechaAdicion == DateTime.MinValue ? "N/A" : producto.FechaAdicion.ToString("yyyy-MM-dd HH:mm"))</td>
-                            <td>@producto.AdicionadoPor</td>
-                            <td>@(producto.FechaModificacion == DateTime.MinValue ? "N/A" : producto.FechaModificacion.ToString("yyyy-MM-dd HH:mm"))</td>
-                            <td>@producto.ModificacionPor</td>
-                            <td>
-                                <button type="button" class="btn btn-warning btn-sm" onclick="eliminarProducto(@producto.IdProducto,Nombre,Descripcion,Precio,Stock,IdProveedor)">
-                                    Editar
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(@producto.IdProducto)">
-                                    Eliminar
-                                </button>
-                            </td>
-                        </tr>
+                        @foreach (var producto in productos)
+                        {
+                            <tr>
+                                <td>@producto.IdProducto</td>
+                                <td>@producto.Nombre</td>
+                                <td>@producto.Descripcion</td>
+                                <td>@producto.Precio</td>
+                                <td>@producto.Stock</td>
+                                <td>@producto.IdProveedor</td>
+                                <td>@(producto.FechaAdicion == DateTime.MinValue ? "N/A" : producto.FechaAdicion.ToString("yyyy-MM-dd HH:mm"))</td>
+                                <td>@producto.AdicionadoPor</td>
+                                <td>@(producto.FechaModificacion == DateTime.MinValue ? "N/A" : producto.FechaModificacion.ToString("yyyy-MM-dd HH:mm"))</td>
+                                <td>@producto.ModificacionPor</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm" onclick="cargarProducto('@producto.Nombre','@producto.Descripcion',@producto.Precio,@producto.Stock,@producto.IdProveedor)">
+                                        Editar
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(@producto.IdProducto)">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        }
                     }
-                }
-            </tbody>
-        </table>    
+                </tbody>
+            </table>    
+        </div>
     </div>
-
-</div>
+</form>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
 <script>
+    document.getElementById('btnEditar').style.display = 'none';
+
     function eliminarProducto(id) {
         if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
             fetch(`/Home/Eli_Pro/${id}`, {
@@ -120,5 +122,14 @@
                 }
             })
         }
+    }
+    function cargarProducto(Nombre, Descripcion, Precio, Stock, Id_Proveedor) {
+        document.getElementById("NombreId").value = Nombre;
+        document.getElementById("TADescripcion").value = Descripcion;
+        document.getElementById("Precio").value = Precio;
+        document.getElementById("Stock").value = Stock;
+        document.getElementById("IdProveedor").value = Id_Proveedor;
+
+        document.getElementById('btnEditar').style.display = 'inline';
     }
 </script>
