@@ -101,18 +101,33 @@ namespace Final_Project_PVI.Controllers
                 return StatusCode(500, "Error interno del servidor");
             }
         }
-        public IActionResult Edi_Pro(int id,string nombre,string descripcion,double precio,int stock, int idproveedor)
+        public IActionResult Edi_Pro([FromBody] Producto producto)
         {
             try
             {
                 var nombreUsuario = HttpContext.Session.GetString("NombreUsuario");
-                _datos.ActualizarProducto(id, nombre,descripcion,precio,stock,idproveedor, nombreUsuario);
+                if (string.IsNullOrEmpty(nombreUsuario))
+                {
+                    TempData["ErrorMessage"] = "Sesión expirada o no iniciada.";
+                    return RedirectToAction("Start");
+                }
+
+                _datos.ActualizarProducto(
+                    producto.IdProducto,
+                    producto.Nombre,
+                    producto.Descripcion,
+                    Convert.ToDouble(producto.Precio),
+                    producto.Stock,
+                    producto.IdProveedor,
+                    nombreUsuario
+                );
+
                 TempData["SuccessMessage"] = "El producto se ha actualizado con éxito.";
                 return Ok();
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "No se pudo eliminar el producto. Error: " + ex.Message;
+                TempData["ErrorMessage"] = "No se pudo actualizar el producto. Error: " + ex.Message;
                 return StatusCode(500, "Error interno del servidor");
             }
         }

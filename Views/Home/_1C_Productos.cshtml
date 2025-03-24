@@ -24,6 +24,11 @@
         <div>
 
             <div class="boxInputs">
+                 <div class="form-group">
+                    <label id="Ide_Pro_Hid_Lab" style="display: none;">Identificación:</label>
+                    <input id="Ide_Pro_Hid_Inp" asp-for="IdProducto" type="hidden" class="form-control" placeholder="Identificaciones del producto." style="display: none;   />
+                </div>
+
                 <div class="form-group">
                     <label>Nombre</label>
                     <input asp-for="Nombre" type="text" class="form-control" placeholder="Nombre del producto" id="NombreId" />
@@ -46,12 +51,12 @@
 
                 <div class="form-group">
                     <label>Identificacion del Proveedor</label>
-                    <input asp-for="IdProveedor" type="text" class="form-control" placeholder="Id del Proveedor" id="IdProveedor" />
+                    <input asp-for="IdProveedor" type="text" class="form-control" placeholder="Id del Proveedor" id="ProveedorId" />
                 </div>
             </div>
             <button type="reset" class="btn btn-secondary">Limpiar</button>
             <button type="submit" class="btn btn-primary">Agregar producto</button>
-            <button id="btnEditar" class="btn btn-info">Editar</button>
+            <button type="button" id="btnEditar" class="btn btn-info" onclick="actualizarProducto()">Editar</button>
         </div>
         <div>
             <table class="table table-hover mt-3">
@@ -88,7 +93,7 @@
                                 <td>@(producto.FechaModificacion == DateTime.MinValue ? "N/A" : producto.FechaModificacion.ToString("yyyy-MM-dd HH:mm"))</td>
                                 <td>@producto.ModificacionPor</td>
                                 <td>
-                                    <button type="button" class="btn btn-warning btn-sm" onclick="cargarProducto('@producto.Nombre','@producto.Descripcion',@producto.Precio,@producto.Stock,@producto.IdProveedor)">
+                                    <button type="button" class="btn btn-warning btn-sm" onclick="cargarProducto(@producto.IdProducto,'@producto.Nombre','@producto.Descripcion',@producto.Precio,@producto.Stock,@producto.IdProveedor)">
                                         Editar
                                     </button>
                                 </td>
@@ -123,13 +128,65 @@
             })
         }
     }
-    function cargarProducto(Nombre, Descripcion, Precio, Stock, Id_Proveedor) {
+    function cargarProducto(Id,Nombre, Descripcion, Precio, Stock, Id_Proveedor) {
+        document.getElementById("Ide_Pro_Hid_Inp").value = Id;
         document.getElementById("NombreId").value = Nombre;
         document.getElementById("TADescripcion").value = Descripcion;
         document.getElementById("Precio").value = Precio;
         document.getElementById("Stock").value = Stock;
-        document.getElementById("IdProveedor").value = Id_Proveedor;
+        document.getElementById("ProveedorId").value = Id_Proveedor;
 
         document.getElementById('btnEditar').style.display = 'inline';
+        //document.getElementById('Ide_Pro_Hid_Lab').style.display = 'inline';
+        document.getElementById('Ide_Pro_Hid_Inp').style.display = 'inline-block';
+    }
+    function actualizarProducto() {
+        console.log(document.getElementById("NombreId").value);
+
+        let idProducto = document.getElementById("Ide_Pro_Hid_Inp").value;
+        let nombre = document.getElementById("NombreId").value;
+        let descripcion = document.getElementById("TADescripcion").value;
+        let precio = parseFloat(document.getElementById("Precio").value);
+        let stock = parseInt(document.getElementById("Stock").value);
+        let idProveedor = document.getElementById("ProveedorId").value;
+        idProveedor = idProveedor ? parseInt(idProveedor) : null;
+
+        fetch(`/Home/Edi_Pro`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                IdProducto: idProducto,
+                Nombre: nombre,
+                Descripcion: descripcion,
+                Precio: precio,
+                Stock: stock,
+                IdProveedor: idProveedor,
+                ModificadoPor: "Admin"
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Error al actualizar el producto: " + error.message);
+            });
+
+        document.getElementById('btnEditar').style.display = 'none';
+        document.getElementById('Ide_Pro_Hid_Lab').style.display = 'none';
+        document.getElementById('Ide_Pro_Hid_Inp').style.display = 'none';
+
+        document.getElementById("Ide_Pro_Hid_Inp").value = "";
+        document.getElementById("NombreId").value = "";
+        document.getElementById("TADescripcion").value = "";
+        document.getElementById("Precio").value = "";
+        document.getElementById("Stock").value = "";
+        document.getElementById("ProveedorId").value = "";
     }
 </script>

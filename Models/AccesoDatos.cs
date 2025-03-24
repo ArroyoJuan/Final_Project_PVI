@@ -95,18 +95,19 @@ namespace Final_Project_PVI.Models
             {
                 try
                 {
-                    string query = "Exec sp_ActualizarProducto @IdProducto,@Nombre,@Descripcion,@Precio,@Stock,@IdProveedor,@ModificadoPor";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("sp_ActualizarProducto", conn))
                     {
-                        cmd.Parameters.AddWithValue("@Nombre", id);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@IdProducto", id);
                         cmd.Parameters.AddWithValue("@Nombre", nombre);
                         cmd.Parameters.AddWithValue("@Descripcion", descripcion);
                         cmd.Parameters.AddWithValue("@Precio", precio);
                         cmd.Parameters.AddWithValue("@Stock", stock);
                         cmd.Parameters.AddWithValue("@IdProveedor", idproveedor);
-                        cmd.Parameters.AddWithValue("@AdicionadoPor", modificadoPor);
+                        cmd.Parameters.AddWithValue("@ModificadoPor", modificadoPor);
 
-                        conn.Open();
                         cmd.ExecuteNonQuery();
                     }
                 }
